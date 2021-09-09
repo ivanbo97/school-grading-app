@@ -24,7 +24,7 @@ public class AggregatedDataBean {
 	private Mark mark;
 
 	public void bindMarkToStudentAndCourse() {
-		
+
 		mark.setStudent(student);
 		mark.setCourse(course);
 	}
