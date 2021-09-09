@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.opencsv.bean.CsvBindByName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,9 +27,11 @@ public class Student {
 	@Id
 	@Column(name = ENTITY_STUDENT_ID_COLUMN)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@CsvBindByName(column = CSV_HEADER_STUDENT_ID)
 	private Long id;
 
 	@Column(name = ENTITY_STUDENT_NAME_COLUMN)
+	@CsvBindByName(column = CSV_HEADER_STUDENT_NAME)
 	private String studentName;
 
 }

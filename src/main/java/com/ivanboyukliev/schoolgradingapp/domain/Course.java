@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.opencsv.bean.CsvBindByName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +24,11 @@ public class Course {
 
 	@Id
 	@Column(name = ENTITY_COURSE_ID_COLUMN)
+	@CsvBindByName(column = CSV_HEADER_COURSE_ID)
 	private Long id;
 
 	@Column(name = ENTITY_COURSE_NAME_COLUMN)
+	@CsvBindByName(column = CSV_HEADER_COURSE_NAME)
 	private String courseName;
 
 }

@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvDate;
+
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 
 import java.time.LocalDateTime;
@@ -24,12 +27,16 @@ public class Mark {
 	@Id
 	@Column(name = ENTITY_MARK_ID_COLUMN)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@CsvBindByName(column = CSV_HEADER_MARK_ID)
 	private Long id;
 
 	@Column(name = ENTITY_MARK_VAL_COLUMN)
+	@CsvBindByName(column = CSV_HEADER_MARK)
 	private Double mark;
 
 	@Column(name = ENTITY_MARK_DATE_COLUMN)
+	@CsvBindByName(column = CSV_HEADER_MARK_DATE)
+	@CsvDate(ENTITY_MARK_DATE_TIME_FORMAT)
 	private LocalDateTime markDate;
 
 	@ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
