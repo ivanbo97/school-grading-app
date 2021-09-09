@@ -22,7 +22,7 @@ public class AggregatedDataBean {
 
 	@CsvRecurse
 	private Mark mark;
-	
+
 	public void bindMarkToStudentAndCourse() {
 		
 		mark.setStudent(student);
