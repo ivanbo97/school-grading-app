@@ -15,10 +15,18 @@ import javax.persistence.Table;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvDate;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 
 import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = ENTITY_MARK_TABLE_NAME)
 
