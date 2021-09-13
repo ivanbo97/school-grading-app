@@ -21,7 +21,7 @@ public interface StudentMapper {
 				.build();
 	}
 	
-	@Mapping(source = "name", target = "name")
+	@Mapping(source = "name", target = "studentName")
 	Student studentDTOToStudent(StudentDTO studentDTO);
 
 }
