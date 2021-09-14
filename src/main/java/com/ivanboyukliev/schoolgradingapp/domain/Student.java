@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.ivanboyukliev.schoolgradingapp.baseentity.BaseEntity;
+import com.ivanboyukliev.schoolgradingapp.baseentity.BaseNamedEntity;
 import com.opencsv.bean.CsvBindByName;
 
 import lombok.AllArgsConstructor;
@@ -22,16 +24,25 @@ import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 @AllArgsConstructor
 @Entity
 @Table(name = ENTITY_STUDENT_TABLE_NAME)
-public class Student {
+public class Student implements BaseNamedEntity, BaseEntity {
 
-	@Id
-	@Column(name = ENTITY_STUDENT_ID_COLUMN)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@CsvBindByName(column = CSV_HEADER_STUDENT_ID)
-	private Long id;
+    @Id
+    @Column(name = ENTITY_STUDENT_ID_COLUMN)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @CsvBindByName(column = CSV_HEADER_STUDENT_ID)
+    private Long id;
 
-	@Column(name = ENTITY_STUDENT_NAME_COLUMN)
-	@CsvBindByName(column = CSV_HEADER_STUDENT_NAME)
-	private String studentName;
+    @Column(name = ENTITY_STUDENT_NAME_COLUMN)
+    @CsvBindByName(column = CSV_HEADER_STUDENT_NAME)
+    private String studentName;
 
+    @Override
+    public String getName() {
+        return studentName;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
 }
