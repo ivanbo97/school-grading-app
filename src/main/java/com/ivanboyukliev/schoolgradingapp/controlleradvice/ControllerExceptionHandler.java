@@ -1,6 +1,7 @@
 package com.ivanboyukliev.schoolgradingapp.controlleradvice;
 
 import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomException;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +18,13 @@ public class ControllerExceptionHandler {
         return new ErrorMessage(logError(exception));
     }
 
-    private String logError(EntityNotFoundCustomException exception) {
+    @ExceptionHandler(EntityValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleEntityValidationException(EntityValidationException exception){
+        return new ErrorMessage(logError(exception));
+    }
+
+    private String logError(Exception exception) {
         String exceptionMessage = exception.getMessage();
         log.error("Handling {} with message {}",exception.getClass().getSimpleName(),exceptionMessage);
         return exceptionMessage;
