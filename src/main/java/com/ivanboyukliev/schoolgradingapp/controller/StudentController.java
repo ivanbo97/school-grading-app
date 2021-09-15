@@ -2,6 +2,7 @@ package com.ivanboyukliev.schoolgradingapp.controller;
 
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentListDTO;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,5 +31,11 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO findStudentById(@PathVariable String id) {
         return studentService.findStudentById(Long.valueOf(id));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public StudentDTO saveStudent(@RequestBody StudentDTO receivedStudent) throws EntityValidationException {
+        return this.studentService.saveStudent(receivedStudent);
     }
 }
