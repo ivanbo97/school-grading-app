@@ -34,11 +34,11 @@ public class Student implements BaseNamedEntity, BaseEntity {
 
     @Column(name = ENTITY_STUDENT_NAME_COLUMN)
     @CsvBindByName(column = CSV_HEADER_STUDENT_NAME)
-    private String studentName;
+    private String name;
 
     @Override
     public String getName() {
-        return studentName;
+        return name;
     }
 
     @Override
