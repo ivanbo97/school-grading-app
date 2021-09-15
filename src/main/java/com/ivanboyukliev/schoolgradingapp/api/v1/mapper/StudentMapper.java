@@ -16,12 +16,12 @@ public interface StudentMapper {
 	
 	default StudentDTO studentToStudentDTO(Student student) {
 		return StudentDTO.builder()
-				.name(student.getStudentName())
+				.name(student.getName())
 				.studentUrl(STUDENT_BASE_URL + "/" + student.getId())
 				.build();
 	}
 	
-	@Mapping(source = "name", target = "studentName")
+	@Mapping(source = "name", target = "name")
 	Student studentDTOToStudent(StudentDTO studentDTO);
 
 }
