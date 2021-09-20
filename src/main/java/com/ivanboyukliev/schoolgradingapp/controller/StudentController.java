@@ -38,4 +38,11 @@ public class StudentController {
     public StudentDTO saveStudent(@RequestBody StudentDTO receivedStudent) throws EntityValidationException {
         return this.studentService.saveStudent(receivedStudent);
     }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public StudentDTO updateStudent(@PathVariable String id,
+                                    @RequestBody StudentDTO studentDTO) throws EntityValidationException {
+        return studentService.updateStudent(Long.valueOf(id), studentDTO);
+    }
 }
