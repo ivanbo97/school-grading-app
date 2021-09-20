@@ -60,7 +60,7 @@ class StudentServiceImplTest {
                 () -> assertNotNull(foundStudents),
                 () -> assertEquals(students.size(), foundStudents.getStudents().size()));
 
-        then(studentRepository).should(times(1)).findAll();
+        then(studentRepository).should().findAll();
     }
 
     @Test
@@ -76,7 +76,7 @@ class StudentServiceImplTest {
 
         // then
         assertNotNull(foundDTOStudent);
-        then(studentRepository).should(times(1)).findById(12L);
+        then(studentRepository).should().findById(12L);
     }
 
     @Test
@@ -88,7 +88,7 @@ class StudentServiceImplTest {
         // then
         assertThrows(EntityNotFoundCustomException.class,
                 () -> studentService.findStudentById(13L));
-        then(studentRepository).should(times(1)).findById(anyLong());
+        then(studentRepository).should().findById(anyLong());
     }
 
     @Test
@@ -105,6 +105,6 @@ class StudentServiceImplTest {
         // then
         assertNotNull(responseDTO);
         assertEquals(newStudent.getName(), responseDTO.getName());
-        then(studentRepository).should(times(1)).save(any(Student.class));
+        then(studentRepository).should().save(any(Student.class));
     }
 }
