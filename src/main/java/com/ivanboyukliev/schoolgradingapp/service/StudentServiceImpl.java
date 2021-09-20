@@ -70,4 +70,15 @@ public class StudentServiceImpl implements StudentService {
             throw new EntityValidationException(String.format(ERROR_STUDENT_EXISTS, student.getName()));
         }
     }
+
+    @Override
+    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) throws EntityValidationException {
+        basedNamedEntityValidator.validate(studentDTO);
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundCustomException(
+                        String.format(ERROR_STUDENT_NOT_FOUND, id)
+                ));
+        student.setName(studentDTO.getName());
+        return saveStudentToDatabase(student);
+    }
 }
