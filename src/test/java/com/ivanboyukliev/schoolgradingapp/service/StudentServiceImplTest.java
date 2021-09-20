@@ -8,12 +8,10 @@ import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomExceptio
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.STUDENT_BASE_URL;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,17 +50,17 @@ class StudentServiceImplTest {
         List<Student> students = new ArrayList<>();
         students.add(new Student(1L, "Ivan Doe"));
         students.add(new Student(2L, "Gergana Doe"));
-        when(studentRepository.findAll()).thenReturn(students);
+        given(studentRepository.findAll()).willReturn(students);
 
         // when
         StudentListDTO foundStudents = studentService.findAllStudent();
 
         // then
-        assertAll("Assertions on DTO obects",
+        assertAll("Assertions on DTO objects",
                 () -> assertNotNull(foundStudents),
                 () -> assertEquals(students.size(), foundStudents.getStudents().size()));
 
-        verify(studentRepository).findAll();
+        then(studentRepository).should(times(1)).findAll();
     }
 
     @Test
@@ -70,35 +69,35 @@ class StudentServiceImplTest {
 
         // given
         Student foundStudent = new Student();
-        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(foundStudent));
+        given(studentRepository.findById(anyLong())).willReturn(Optional.of(foundStudent));
 
         // when
         StudentDTO foundDTOStudent = studentService.findStudentById(12L);
 
-        //then
+        // then
         assertNotNull(foundDTOStudent);
-        verify(studentRepository).findById(anyLong());
+        then(studentRepository).should(times(1)).findById(12L);
     }
 
     @Test
     @DisplayName("Test findStudentById() for exception")
     void findStudentByIdExceptionTest() {
-        when(studentRepository.findById(13L)).thenThrow(EntityNotFoundCustomException.class);
+        // given
+        given(studentRepository.findById(13L)).willThrow(EntityNotFoundCustomException.class);
+
+        // then
         assertThrows(EntityNotFoundCustomException.class,
                 () -> studentService.findStudentById(13L));
-
-        verify(studentRepository).findById(anyLong());
+        then(studentRepository).should(times(1)).findById(anyLong());
     }
 
     @Test
+    @DisplayName("Test saveStudent()")
     void saveStudent() throws EntityValidationException {
         // given
         StudentDTO studentForSaving = StudentDTO.builder().name("Ivan Doe").build();
-        StudentDTO expectedResponseDTO = StudentDTO.builder()
-                .name("Ivan Doe")
-                .studentUrl(STUDENT_BASE_URL + "/" + 1).build();
         Student newStudent = new Student(1L, "Ivan Doe");
-        when(studentRepository.save(any(Student.class))).thenReturn(newStudent);
+        given(studentRepository.save(any(Student.class))).willReturn(newStudent);
 
         // when
         StudentDTO responseDTO = studentService.saveStudent(studentForSaving);
@@ -106,6 +105,6 @@ class StudentServiceImplTest {
         // then
         assertNotNull(responseDTO);
         assertEquals(newStudent.getName(), responseDTO.getName());
-        verify(studentRepository).save(any(Student.class));
+        then(studentRepository).should(times(1)).save(any(Student.class));
     }
 }
