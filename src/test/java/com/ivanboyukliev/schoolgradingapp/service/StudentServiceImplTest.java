@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
@@ -106,5 +106,39 @@ class StudentServiceImplTest {
         assertNotNull(responseDTO);
         assertEquals(newStudent.getName(), responseDTO.getName());
         then(studentRepository).should().save(any(Student.class));
+    }
+
+    @Test
+    void updateStudentTest() throws EntityValidationException {
+        // given
+        Student foundStudent = new Student(1L, "John Doe");
+        StudentDTO providedStudentDTO = new StudentDTO();
+        providedStudentDTO.setName("Dancho Doe");
+        given(studentRepository.findById(anyLong())).willReturn(Optional.of(foundStudent));
+        given(studentRepository.save(any(Student.class))).willReturn(foundStudent);
+        // when
+        StudentDTO updatedStudent = studentService.updateStudent(1L, providedStudentDTO);
+
+        // then
+        assertEquals(providedStudentDTO.getName(), updatedStudent.getName());
+        then(studentRepository).should().findById(anyLong());
+        then(studentRepository).should().save(any(Student.class));
+    }
+
+    @Test
+    @DisplayName("Update Student Exception Test")
+    void updateStudentExceptionTest() {
+        // given
+        Optional<Student> student = Optional.empty();
+        StudentDTO providedStudentDTO = new StudentDTO();
+        providedStudentDTO.setName("Troublesome student");
+        given(studentRepository.findById(13L)).willReturn(student);
+
+        // when
+        assertThrows(EntityNotFoundCustomException.class,
+                () -> studentService.updateStudent(13L, providedStudentDTO));
+
+        // then
+        then(studentRepository).should().findById(anyLong());
     }
 }
