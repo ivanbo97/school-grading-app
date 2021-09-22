@@ -45,4 +45,10 @@ public class StudentController {
                                     @RequestBody StudentDTO studentDTO) throws EntityValidationException {
         return studentService.updateStudent(Long.valueOf(id), studentDTO);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteStudentById(@PathVariable String id){
+        studentService.deleteStudentById(Long.valueOf(id));
+    }
 }
