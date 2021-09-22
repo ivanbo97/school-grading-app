@@ -81,4 +81,12 @@ public class StudentServiceImpl implements StudentService {
         student.setName(studentDTO.getName());
         return saveStudentToDatabase(student);
     }
+
+    @Override
+    public void deleteStudentById(Long id) {
+        if (!studentRepository.existsById(id)) {
+            throw new EntityNotFoundCustomException(String.format(ERROR_STUDENT_NOT_FOUND, id));
+        }
+        studentRepository.deleteById(id);
+    }
 }
