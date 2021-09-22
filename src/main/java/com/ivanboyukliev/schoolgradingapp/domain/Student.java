@@ -1,20 +1,16 @@
 package com.ivanboyukliev.schoolgradingapp.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.ivanboyukliev.schoolgradingapp.baseentity.BaseEntity;
 import com.ivanboyukliev.schoolgradingapp.baseentity.BaseNamedEntity;
 import com.opencsv.bean.CsvBindByName;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 
@@ -35,6 +31,11 @@ public class Student implements BaseNamedEntity, BaseEntity {
     @Column(name = ENTITY_STUDENT_NAME_COLUMN)
     @CsvBindByName(column = CSV_HEADER_STUDENT_NAME)
     private String name;
+
+    @OneToMany(
+            mappedBy = ENTITY_MAPPING_STUDENT,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private Set<Mark> marks = new HashSet<>();
 
     @Override
     public String getName() {
