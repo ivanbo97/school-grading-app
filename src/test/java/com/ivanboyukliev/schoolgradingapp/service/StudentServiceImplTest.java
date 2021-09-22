@@ -141,4 +141,25 @@ class StudentServiceImplTest {
         // then
         then(studentRepository).should().findById(anyLong());
     }
+
+    @Test
+    void deleteNotExistingStudentByIdTest() {
+        // given
+        given(studentRepository.existsById(anyLong())).willReturn(false);
+
+        // when, then
+        assertThrows(EntityNotFoundCustomException.class,
+                () -> studentService.deleteStudentById(13L));
+    }
+
+    @Test
+    void deleteExistingStudentByIdTest() {
+        // given
+        given(studentRepository.existsById(anyLong())).willReturn(true);
+        // when, then
+        assertDoesNotThrow(() -> studentService.deleteStudentById(anyLong()));
+        then(studentRepository).should().existsById(anyLong());
+
+
+    }
 }
