@@ -4,6 +4,7 @@ public final class ApplicationConstants {
     public static final String ENTITY_STUDENT_TABLE_NAME = "student";
     public static final String ENTITY_STUDENT_ID_COLUMN = "student_id";
     public static final String ENTITY_STUDENT_NAME_COLUMN = "student_name";
+    public static final String ENTITY_MAPPING_STUDENT = "student";
 
     public static final String ENTITY_MARK_TABLE_NAME = "mark";
     public static final String ENTITY_MARK_ID_COLUMN = "mark_id";
