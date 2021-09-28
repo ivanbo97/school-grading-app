@@ -37,6 +37,10 @@ public class Student implements BaseNamedEntity, BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Mark> marks = new HashSet<>();
 
+    @OneToOne
+    @JoinColumn(name = ENTITY_SCHOOL_CREDENTIALS_COLUMN_NAME_USER_CREDENTIALS_ID)
+    private SchoolSystemCredential credential;
+
     @Override
     public String getName() {
         return name;
