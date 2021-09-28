@@ -18,6 +18,10 @@ public final class ApplicationConstants {
     public static final String ENTITY_COURSE_ID_COLUMN = "course_id";
     public static final String ENTITY_COURSE_NAME_COLUMN = "course_name";
 
+    public static final String ENTITY_SCHOOL_CREDENTIALS_TABLE_NAME = "user_credentials";
+    public static final String ENTITY_SCHOOL_CREDENTIALS_COLUMN_NAME_USER_CREDENTIALS_ID = "user_credentials_id";
+
+
     // == CSV header names constants ==
     public static final String CSV_HEADER_COURSE_ID = "course_id";
     public static final String CSV_HEADER_COURSE_NAME = "course_name";
