@@ -3,7 +3,6 @@ package com.ivanboyukliev.schoolgradingapp.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentListDTO;
-import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,8 @@ class StudentControllerTest {
         StudentListDTO studentListDTO = new StudentListDTO(students);
         given(studentService.findAllStudent()).willReturn(studentListDTO);
 
-        mockMvc.perform(get("/api/v1/student").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/v1/student")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.students", hasSize(1)))
                 .andExpect(jsonPath("$.students[0].student_name", is(exampleStudent.getName())));
