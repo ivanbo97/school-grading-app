@@ -48,8 +48,8 @@ class StudentServiceImplTest {
     void findAllStudent() {
         // given
         List<Student> students = new ArrayList<>();
-        students.add(new Student(1L, "Ivan Doe", null));
-        students.add(new Student(2L, "Gergana Doe", null));
+        students.add(new Student(1L, "Ivan Doe", null,null));
+        students.add(new Student(2L, "Gergana Doe", null,null));
         given(studentRepository.findAll()).willReturn(students);
 
         // when
@@ -96,7 +96,7 @@ class StudentServiceImplTest {
     void saveStudent() throws EntityValidationException {
         // given
         StudentDTO studentForSaving = StudentDTO.builder().name("Ivan Doe").build();
-        Student newStudent = new Student(1L, "Ivan Doe", null);
+        Student newStudent = new Student(1L, "Ivan Doe", null,null);
         given(studentRepository.save(any(Student.class))).willReturn(newStudent);
 
         // when
@@ -111,7 +111,7 @@ class StudentServiceImplTest {
     @Test
     void updateStudentTest() throws EntityValidationException {
         // given
-        Student foundStudent = new Student(1L, "John Doe", null);
+        Student foundStudent = new Student(1L, "John Doe", null,null);
         StudentDTO providedStudentDTO = new StudentDTO();
         providedStudentDTO.setName("Dancho Doe");
         given(studentRepository.findById(anyLong())).willReturn(Optional.of(foundStudent));
