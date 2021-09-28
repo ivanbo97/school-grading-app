@@ -20,8 +20,7 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,6 +84,37 @@ class StudentControllerTest {
                         .content(asJsonString(providedStudentForUpdate)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.student_name", is(providedStudentForUpdate.getName())));
+    }
+
+    @Test
+    void saveStudentTest() throws Exception {
+        // given
+        StudentDTO providedStudent = StudentDTO.builder()
+                .name("Georgi Georgiev")
+                .build();
+
+        StudentDTO savedStudent = StudentDTO.builder()
+                .name("Georgi Georgiev")
+                .studentUrl("/api/v1/student/13")
+                .build();
+
+        given(studentService.saveStudent(any(StudentDTO.class)))
+                .willReturn(savedStudent);
+
+        // when then
+        mockMvc.perform(post("/api/v1/student")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(providedStudent)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.student_name", is(savedStudent.getName())));
+
+    }
+
+    @Test
+    void deleteStudentByIdTest() throws Exception {
+        // given
+        mockMvc.perform(delete("/api/v1/student/13"))
+                .andExpect(status().isOk());
     }
 
     public static String asJsonString(final Object obj) {
