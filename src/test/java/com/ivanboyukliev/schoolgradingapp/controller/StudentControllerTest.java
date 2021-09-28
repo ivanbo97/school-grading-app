@@ -15,7 +15,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,6 +51,15 @@ class StudentControllerTest {
     }
 
     @Test
-    void findStudentById() {
+    void findStudentById() throws Exception {
+        //given
+        StudentDTO foundStudent = new StudentDTO("Maria Petrova", "/api/v1/student/777");
+        given(studentService.findStudentById(anyLong())).willReturn(foundStudent);
+
+        mockMvc.perform(get("/api/v1/student/77")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.student_name", is(foundStudent.getName())));
+        then(studentService).should().findStudentById(anyLong());
     }
 }
