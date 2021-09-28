@@ -1,7 +1,9 @@
 package com.ivanboyukliev.schoolgradingapp.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentListDTO;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,11 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,5 +64,34 @@ class StudentControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.student_name", is(foundStudent.getName())));
         then(studentService).should().findStudentById(anyLong());
+    }
+
+    @Test
+    void updateStudentTest() throws Exception {
+        StudentDTO providedStudentForUpdate = StudentDTO.builder()
+                .name("Ivan Petrov")
+                .studentUrl("/api/v1/student/13")
+                .build();
+
+        StudentDTO updatedStudent = StudentDTO.builder()
+                .name("Ivan Petrov")
+                .studentUrl("/api/v1/student/13")
+                .build();
+
+        given(studentService.updateStudent(eq(13L), any(StudentDTO.class))).willReturn(updatedStudent);
+
+        mockMvc.perform(put("/api/v1/student/13")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(providedStudentForUpdate)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.student_name", is(providedStudentForUpdate.getName())));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
