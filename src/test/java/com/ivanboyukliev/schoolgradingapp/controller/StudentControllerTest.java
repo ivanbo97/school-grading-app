@@ -43,7 +43,7 @@ class StudentControllerTest {
         List<StudentDTO> students = new ArrayList<>();
         students.add(exampleStudent);
         StudentListDTO studentListDTO = new StudentListDTO(students);
-        given(studentService.findAllStudent()).willReturn(studentListDTO);
+        given(studentService.findAllStudents()).willReturn(studentListDTO);
 
         mockMvc.perform(get("/api/v1/student")
                         .contentType(MediaType.APPLICATION_JSON))
