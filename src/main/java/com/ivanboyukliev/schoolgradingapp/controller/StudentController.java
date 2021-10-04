@@ -24,7 +24,7 @@ public class StudentController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO findAllStudents() {
-        return this.studentService.findAllStudent();
+        return this.studentService.findAllStudents();
     }
 
     @GetMapping("/{id}")
@@ -48,7 +48,7 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteStudentById(@PathVariable String id){
+    public void deleteStudentById(@PathVariable String id) {
         studentService.deleteStudentById(Long.valueOf(id));
     }
 }
