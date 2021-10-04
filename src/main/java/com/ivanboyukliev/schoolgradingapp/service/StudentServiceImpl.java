@@ -34,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentListDTO findAllStudent() {
+    public StudentListDTO findAllStudents() {
         return new StudentListDTO(
                 this.studentRepository.findAll()
                         .stream()
