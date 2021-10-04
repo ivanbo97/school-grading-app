@@ -30,11 +30,11 @@ public class Course implements BaseNamedEntity, BaseEntity {
 
     @Column(name = ENTITY_COURSE_NAME_COLUMN)
     @CsvBindByName(column = CSV_HEADER_COURSE_NAME)
-    private String courseName;
+    private String name;
 
     @Override
     public String getName() {
-        return courseName;
+        return name;
     }
 
     @Override
