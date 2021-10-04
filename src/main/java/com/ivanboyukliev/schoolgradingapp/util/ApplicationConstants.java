@@ -44,5 +44,7 @@ public final class ApplicationConstants {
     public static final String ERROR_ENTITY_NAME_IS_EMPTY = "Entity name is empty.";
     public static final String ERROR_ENTITY_NAME_IS_BLANK = "Entity name is blank.";
 
+    public static final String ERROR_COURSE_NOT_FOUND = "Course with id = %d not found.";
+
     public static final String ERROR_STUDENT_EXISTS = "Entity with name %s already exists.";
 }
