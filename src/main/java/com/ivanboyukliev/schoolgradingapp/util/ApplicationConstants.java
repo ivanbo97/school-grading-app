@@ -37,6 +37,7 @@ public final class ApplicationConstants {
     public static final String API_V1 = "/api/v1";
     public static final String STUDENT_BASE_URL = API_V1 + "/student";
     public static final String COURSE_BASE_URL = API_V1 + "/course";
+    public static final String MARK_BASE_URL = API_V1 + "/mark";
 
     // Exception Messages
     public static final String ERROR_STUDENT_NOT_FOUND = "Student with id = %d not found.";
@@ -47,4 +48,5 @@ public final class ApplicationConstants {
     public static final String ERROR_COURSE_NOT_FOUND = "Course with id = %d not found.";
 
     public static final String ERROR_STUDENT_EXISTS = "Entity with name %s already exists.";
+    public static final String ERROR_COURSE_EXISTS = "Course with name %s already exists.";
 }
