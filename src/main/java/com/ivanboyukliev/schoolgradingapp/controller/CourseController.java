@@ -2,6 +2,7 @@ package com.ivanboyukliev.schoolgradingapp.controller;
 
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseListDTO;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,4 +32,9 @@ public class CourseController {
         return courseService.findCourseById(Long.valueOf(id));
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseDTO saveCourse(@RequestBody CourseDTO courseDTO) throws EntityValidationException {
+        return courseService.saveCourse(courseDTO);
+    }
 }
