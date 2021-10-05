@@ -1,8 +1,10 @@
 package com.ivanboyukliev.schoolgradingapp.service;
 
 import com.ivanboyukliev.schoolgradingapp.api.v1.mapper.CourseMapper;
+import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseListDTO;
 import com.ivanboyukliev.schoolgradingapp.domain.Course;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,5 +58,21 @@ class CourseServiceImplTest {
 
         // then
         assertEquals(2, retrievedCourses.getCourses().size());
+    }
+
+    @Test
+    void saveCourse() throws EntityValidationException {
+        // given
+        CourseDTO courseForSaving = CourseDTO.builder().name("Math").build();
+        Course newCourse = new Course(1L,"Math");
+        given(courseRepository.save(any(Course.class))).willReturn(newCourse);
+
+        // when
+        CourseDTO savedCourse = courseService.saveCourse(courseForSaving);
+
+        // then
+        assertNotNull(savedCourse);
+        assertEquals("Math",savedCourse.getName());
+
     }
 }
