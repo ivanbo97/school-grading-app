@@ -12,7 +12,7 @@ public interface CourseService {
 
     CourseDTO saveCourse(CourseDTO course) throws EntityValidationException;
 
-    CourseDTO updateCourse(CourseDTO course) throws EntityValidationException;
+    CourseDTO updateCourse(Long id, CourseDTO course) throws EntityValidationException;
 
     void deleteCourseById(Long id);
 
