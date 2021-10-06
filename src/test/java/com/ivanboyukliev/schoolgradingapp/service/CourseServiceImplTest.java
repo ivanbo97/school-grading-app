@@ -4,6 +4,7 @@ import com.ivanboyukliev.schoolgradingapp.api.v1.mapper.CourseMapper;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseListDTO;
 import com.ivanboyukliev.schoolgradingapp.domain.Course;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomException;
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
@@ -16,9 +17,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -64,7 +65,7 @@ class CourseServiceImplTest {
     void saveCourse() throws EntityValidationException {
         // given
         CourseDTO courseForSaving = CourseDTO.builder().name("Math").build();
-        Course newCourse = new Course(1L,"Math");
+        Course newCourse = new Course(1L, "Math");
         given(courseRepository.save(any(Course.class))).willReturn(newCourse);
 
         // when
@@ -72,7 +73,45 @@ class CourseServiceImplTest {
 
         // then
         assertNotNull(savedCourse);
-        assertEquals("Math",savedCourse.getName());
+        assertEquals("Math", savedCourse.getName());
+
+    }
+
+    @Test
+    void updateCourse() throws EntityValidationException {
+        // given
+        Course retrievedCourse = new Course(12L, "Biology");
+
+        CourseDTO courseForUpdate = CourseDTO.builder()
+                .name("Biology I")
+                .build();
+
+        Course updatedCourse = new Course(12L, "Biology I");
+        given(courseRepository.findById(12L)).willReturn(Optional.of(retrievedCourse));
+        given(courseRepository.save(any(Course.class))).willReturn(updatedCourse);
+
+        // when
+        CourseDTO updatedCourseDTO = courseService.updateCourse(12L, courseForUpdate);
+
+        // then
+        assertNotNull(updatedCourseDTO);
+        assertEquals("Biology I", updatedCourseDTO.getName());
+
+    }
+
+    @Test
+    void updateCourseExceptionTest() {
+
+        // given
+        CourseDTO courseForUpdate = CourseDTO.builder()
+                .name("Biology I")
+                .build();
+
+        given(courseRepository.findById(12L)).willThrow(EntityNotFoundCustomException.class);
+
+        // when, then
+        assertThrows(EntityNotFoundCustomException.class, () ->
+                courseService.updateCourse(12L, courseForUpdate));
 
     }
 }
