@@ -62,8 +62,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO updateCourse(CourseDTO course) throws EntityValidationException {
-        return null;
+    public CourseDTO updateCourse(Long id, CourseDTO course) throws EntityValidationException {
+        entityValidator.validate(course);
+        validateCourseExistence(course);
+        Course retrievedCourse = courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundCustomException(
+                        String.format(ERROR_COURSE_NOT_FOUND, id)
+                ));
+        retrievedCourse.setName(course.getName());
+        return saveCourseToDatabase(retrievedCourse);
     }
 
     @Override
