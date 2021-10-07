@@ -75,7 +75,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourseById(Long id) {
-
+            if(!courseRepository.existsById(id)){
+                throw new EntityNotFoundCustomException(String.format(ERROR_COURSE_NOT_FOUND,id));
+            }
+            courseRepository.deleteById(id);
     }
 
     private void validateCourseExistence(CourseDTO courseDTO) throws EntityValidationException {
