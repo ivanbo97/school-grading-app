@@ -37,4 +37,10 @@ public class CourseController {
     public CourseDTO saveCourse(@RequestBody CourseDTO courseDTO) throws EntityValidationException {
         return courseService.saveCourse(courseDTO);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteCourse(@PathVariable String id) {
+        courseService.deleteCourseById(Long.valueOf(id));
+    }
 }
