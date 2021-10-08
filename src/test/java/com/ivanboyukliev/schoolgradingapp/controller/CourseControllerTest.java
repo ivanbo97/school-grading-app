@@ -12,12 +12,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
+import static com.ivanboyukliev.schoolgradingapp.controller.StudentControllerTest.asJsonString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,5 +62,28 @@ class CourseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.course_name", is(biologyCourse.getName())));
         then(courseService).should().findCourseById(7L);
+    }
+
+    @Test
+    void saveCourseTest() throws Exception {
+        // given
+        CourseDTO providedCourse = new CourseDTO();
+        providedCourse.setName("Chemistry");
+        CourseDTO savedCourse = new CourseDTO("Chemistry", "api/v1/course/3");
+        given(courseService.saveCourse(any(CourseDTO.class))).willReturn(savedCourse);
+
+        // when, them
+        mockMvc.perform(post("/api/v1/course")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(providedCourse)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.course_name", is(savedCourse.getName())));
+
+    }
+
+    @Test
+    void deleteCourseTest() throws Exception {
+        mockMvc.perform(delete("/api/v1/course/13"))
+                .andExpect(status().isOk());
     }
 }
