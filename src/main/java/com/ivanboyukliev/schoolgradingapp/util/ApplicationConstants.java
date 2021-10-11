@@ -38,6 +38,7 @@ public final class ApplicationConstants {
     public static final String STUDENT_BASE_URL = API_V1 + "/student";
     public static final String COURSE_BASE_URL = API_V1 + "/course";
     public static final String MARK_BASE_URL = API_V1 + "/mark";
+    public static final String REPORT_BASE_URL = API_V1 + "/report";
 
     // Exception Messages
     public static final String ERROR_STUDENT_NOT_FOUND = "Student with id = %d not found.";
@@ -46,6 +47,7 @@ public final class ApplicationConstants {
     public static final String ERROR_ENTITY_NAME_IS_BLANK = "Entity name is blank.";
 
     public static final String ERROR_COURSE_NOT_FOUND = "Course with id = %d not found.";
+    public static final String ERROR_MARK_NOT_FOUND = "Mark with id = %d not found.";
 
     public static final String ERROR_STUDENT_EXISTS = "Entity with name %s already exists.";
     public static final String ERROR_COURSE_EXISTS = "Course with name %s already exists.";
