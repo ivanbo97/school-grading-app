@@ -3,6 +3,7 @@ package com.ivanboyukliev.schoolgradingapp.service;
 import com.ivanboyukliev.schoolgradingapp.api.v1.mapper.MarkMapper;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkListDTO;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomException;
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
+
+import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.ERROR_MARK_NOT_FOUND;
 
 @Service
 public class MarkServiceImpl implements MarkService {
@@ -37,7 +40,11 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     public MarkDTO findMarkById(Long id) {
-        return null;
+        return markRepository.findById(id)
+                .map(markMapper::markToMarkDTO)
+                .orElseThrow(()-> new EntityNotFoundCustomException(
+                        String.format(ERROR_MARK_NOT_FOUND,id)
+                ));
     }
 
     @Override
