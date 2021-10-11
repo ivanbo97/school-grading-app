@@ -6,7 +6,9 @@ import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkListDTO;
 import com.ivanboyukliev.schoolgradingapp.domain.Course;
 import com.ivanboyukliev.schoolgradingapp.domain.Mark;
 import com.ivanboyukliev.schoolgradingapp.domain.Student;
+import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
+import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +37,12 @@ class MarkServiceImplTest {
     private MarkRepository markRepository;
 
     @Mock
+    private StudentRepository studentRepository;
+
+    @Mock
+    private CourseRepository courseRepository;
+
+    @Mock
     private BaseNamedEntityValidator entityValidator;
 
     private MarkService markService;
@@ -42,7 +50,8 @@ class MarkServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        markService = new MarkServiceImpl(markRepository, MarkMapper.INSTANCE, entityValidator);
+        markService = new MarkServiceImpl(markRepository, studentRepository, courseRepository,
+                MarkMapper.INSTANCE, entityValidator);
     }
 
     @Test
