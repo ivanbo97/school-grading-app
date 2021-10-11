@@ -1,9 +1,14 @@
 package com.ivanboyukliev.schoolgradingapp.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.ivanboyukliev.schoolgradingapp.domain.Mark;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MarkRepository extends JpaRepository<Mark, Long> {
+
+    @Query("SELECT AVG(mark) FROM Mark WHERE student.id = :studentId AND course.id = :courseId")
+    Double avgMarkForAStudentInACourse(@Param("studentId") Long studentId,
+                                       @Param("courseId") Long courseId);
 
 }
