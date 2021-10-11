@@ -41,6 +41,8 @@ public final class ApplicationConstants {
     public static final String REPORT_BASE_URL = API_V1 + "/report";
 
     // Exception Messages
+    public static final String ERROR_ENTITY_IS_NULL = "Entity Is Null";
+    public static final String ERROR_ENTITY_ID_IS_NULL = "Entity Id Is Null";
     public static final String ERROR_STUDENT_NOT_FOUND = "Student with id = %d not found.";
     public static final String ERROR_ENTITY_NAME_IS_NULL = "Entity ID is null.";
     public static final String ERROR_ENTITY_NAME_IS_EMPTY = "Entity name is empty.";
@@ -48,6 +50,8 @@ public final class ApplicationConstants {
 
     public static final String ERROR_COURSE_NOT_FOUND = "Course with id = %d not found.";
     public static final String ERROR_MARK_NOT_FOUND = "Mark with id = %d not found.";
+    public static final String ERROR_ENTITY_MARK_VALUE_IS_OUT_OF_BOUNDS_LESS = "Mark Value Is Less Than 2.00";
+    public static final String ERROR_ENTITY_MARK_VALUE_IS_OUT_OF_BOUNDS_MORE = "Mark Value Is Greater Than 6.00";
 
     public static final String ERROR_STUDENT_EXISTS = "Entity with name %s already exists.";
     public static final String ERROR_COURSE_EXISTS = "Course with name %s already exists.";
