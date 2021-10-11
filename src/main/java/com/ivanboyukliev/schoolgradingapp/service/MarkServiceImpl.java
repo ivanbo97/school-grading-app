@@ -1,33 +1,49 @@
 package com.ivanboyukliev.schoolgradingapp.service;
 
 import com.ivanboyukliev.schoolgradingapp.api.v1.mapper.MarkMapper;
+import com.ivanboyukliev.schoolgradingapp.api.v1.model.CourseDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkDTO;
 import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkListDTO;
+import com.ivanboyukliev.schoolgradingapp.api.v1.model.StudentDTO;
+import com.ivanboyukliev.schoolgradingapp.domain.Course;
+import com.ivanboyukliev.schoolgradingapp.domain.Mark;
+import com.ivanboyukliev.schoolgradingapp.domain.Student;
 import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomException;
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
+import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
+import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.ERROR_MARK_NOT_FOUND;
+import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 
 @Service
 public class MarkServiceImpl implements MarkService {
 
     private final MarkRepository markRepository;
 
+    private final StudentRepository studentRepository;
+
+    private final CourseRepository courseRepository;
+
     private final MarkMapper markMapper;
 
-    private final BaseNamedEntityValidator entityValidator;
+    private final BaseNamedEntityValidator baseNamedEntityValidator;
 
     @Autowired
-    public MarkServiceImpl(MarkRepository markRepository, MarkMapper markMapper, BaseNamedEntityValidator entityValidator) {
+    public MarkServiceImpl(MarkRepository markRepository, StudentRepository studentRepository,
+                           CourseRepository courseRepository, MarkMapper markMapper,
+                           BaseNamedEntityValidator baseNamedEntityValidator) {
         this.markRepository = markRepository;
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
         this.markMapper = markMapper;
-        this.entityValidator = entityValidator;
+        this.baseNamedEntityValidator = baseNamedEntityValidator;
     }
 
     @Override
@@ -42,14 +58,16 @@ public class MarkServiceImpl implements MarkService {
     public MarkDTO findMarkById(Long id) {
         return markRepository.findById(id)
                 .map(markMapper::markToMarkDTO)
-                .orElseThrow(()-> new EntityNotFoundCustomException(
-                        String.format(ERROR_MARK_NOT_FOUND,id)
+                .orElseThrow(() -> new EntityNotFoundCustomException(
+                        String.format(ERROR_MARK_NOT_FOUND, id)
                 ));
     }
 
     @Override
     public MarkDTO saveMark(MarkDTO markDTO) throws EntityValidationException {
-        return null;
+        verifyMarkDTO(markDTO);
+        Mark mark = this.relateMark(markDTO);
+        return saveMarkToDatabase(mark);
     }
 
     @Override
@@ -60,5 +78,54 @@ public class MarkServiceImpl implements MarkService {
     @Override
     public void deleteMarkById(Long id) {
 
+    }
+
+    private void verifyMarkDTO(MarkDTO markDTO) throws EntityValidationException {
+        validateMarkValue(markDTO);
+        validateCourseNames(markDTO);
+    }
+
+    private void validateMarkValue(MarkDTO markDTO) throws EntityValidationException {
+        if (markDTO.getMark() < 2.00d) {
+            throw new EntityValidationException(ERROR_ENTITY_MARK_VALUE_IS_OUT_OF_BOUNDS_LESS);
+        }
+        if (markDTO.getMark() > 6.00d) {
+            throw new EntityValidationException(ERROR_ENTITY_MARK_VALUE_IS_OUT_OF_BOUNDS_MORE);
+        }
+    }
+
+    private void validateCourseNames(MarkDTO markDTO) throws EntityValidationException {
+        StudentDTO studentDTO = StudentDTO.builder().name(markDTO.getStudentName()).build();
+        CourseDTO courseDTO = CourseDTO.builder().name(markDTO.getCourseName()).build();
+        this.baseNamedEntityValidator.validate(studentDTO);
+        this.baseNamedEntityValidator.validate(courseDTO);
+
+    }
+
+    private Mark relateMark(MarkDTO markDTO) {
+        Course markCourse = getCourse(markDTO);
+        Student markStudent = getStudent(markDTO);
+        Mark mark = markMapper.markDTOToMark(markDTO);
+        mark.setMarkDate(LocalDateTime.now());
+        mark.setCourse(markCourse);
+        mark.setStudent(markStudent);
+        return mark;
+    }
+
+    private Student getStudent(MarkDTO markDTO) {
+        return this.studentRepository.findStudentByName(markDTO.getStudentName())
+                .orElseThrow(() -> new EntityNotFoundCustomException(
+                        "Student " + markDTO.getStudentName() + " not found"));
+    }
+
+    private Course getCourse(MarkDTO markDTO) {
+        return courseRepository.findCourseByName(markDTO.getCourseName())
+                .orElseThrow(() -> new EntityNotFoundCustomException(
+                        "Course " + markDTO.getCourseName() + " not found"));
+    }
+
+    private MarkDTO saveMarkToDatabase(Mark mark) {
+        Mark savedMark = this.markRepository.save(mark);
+        return this.markMapper.markToMarkDTO(savedMark);
     }
 }
