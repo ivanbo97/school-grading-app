@@ -72,7 +72,16 @@ public class MarkServiceImpl implements MarkService {
 
     @Override
     public MarkDTO updateMark(Long id, MarkDTO markDTO) throws EntityValidationException {
-        return null;
+        verifyMarkDTO(markDTO);
+        Mark mark = markRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundCustomException(String.format(
+                        ERROR_MARK_NOT_FOUND, id
+                )));
+
+        mark.setMark(markDTO.getMark());
+        mark.setMarkDate(LocalDateTime.now());
+
+        return saveMarkToDatabase(mark);
     }
 
     @Override
