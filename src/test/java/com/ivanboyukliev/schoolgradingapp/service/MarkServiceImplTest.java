@@ -6,6 +6,7 @@ import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkListDTO;
 import com.ivanboyukliev.schoolgradingapp.domain.Course;
 import com.ivanboyukliev.schoolgradingapp.domain.Mark;
 import com.ivanboyukliev.schoolgradingapp.domain.Student;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.ENTITY_MARK_DATE_TIME_FORMAT;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -95,5 +97,35 @@ class MarkServiceImplTest {
                 () -> assertEquals(retrievedMark.getMarkDate().format(dtf), foundMark.getDate())
         );
         then(markRepository).should().findById(13L);
+    }
+
+    @Test
+    void updateMarkTest() throws EntityValidationException {
+
+        // given
+        Student student = new Student(12L, "Ivan Doe", new HashSet<>());
+        Course course = new Course(1L, "Biology");
+        Mark retrievedMark = new Mark(13L, 5.0d, LocalDateTime.now(), student, course);
+
+        MarkDTO markForUpdate = MarkDTO.builder().
+                mark(4.0)
+                .courseName("Biology")
+                .studentName("Ivan Doe")
+                .build();
+
+        given(markRepository.findById(anyLong())).willReturn(Optional.of(retrievedMark));
+        given(markRepository.save(any(Mark.class))).willReturn(retrievedMark);
+        // when
+
+        MarkDTO updatedMark = markService.updateMark(13L, markForUpdate);
+
+        // then
+        assertAll("Perform multiple assertions on MarkDTO",
+                () -> assertNotNull(updatedMark),
+                () -> assertEquals(retrievedMark.getCourse().getName(), updatedMark.getCourseName()),
+                () -> assertEquals(retrievedMark.getStudent().getName(), updatedMark.getStudentName()),
+                () -> assertEquals(retrievedMark.getCourse().getName(), updatedMark.getCourseName()));
+        then(markRepository).should().findById(13L);
+        then(markRepository).should().save(retrievedMark);
     }
 }
