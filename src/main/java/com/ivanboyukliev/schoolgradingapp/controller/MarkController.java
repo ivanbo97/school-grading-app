@@ -32,4 +32,12 @@ public class MarkController {
     MarkDTO saveMark(@RequestBody MarkDTO markDTO) throws EntityValidationException {
         return markService.saveMark(markDTO);
     }
+
+    @PutMapping("/{markId}")
+    @ResponseStatus(HttpStatus.OK)
+    MarkDTO updateMark(@PathVariable String markId,
+                       @RequestBody MarkDTO markDTO) throws EntityValidationException {
+
+        return markService.updateMark(Long.valueOf(markId), markDTO);
+    }
 }
