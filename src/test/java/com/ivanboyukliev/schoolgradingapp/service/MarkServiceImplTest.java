@@ -6,6 +6,7 @@ import com.ivanboyukliev.schoolgradingapp.api.v1.model.MarkListDTO;
 import com.ivanboyukliev.schoolgradingapp.domain.Course;
 import com.ivanboyukliev.schoolgradingapp.domain.Mark;
 import com.ivanboyukliev.schoolgradingapp.domain.Student;
+import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomException;
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
@@ -14,6 +15,9 @@ import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,11 +28,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.ENTITY_MARK_DATE_TIME_FORMAT;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -127,5 +131,64 @@ class MarkServiceImplTest {
                 () -> assertEquals(retrievedMark.getCourse().getName(), updatedMark.getCourseName()));
         then(markRepository).should().findById(13L);
         then(markRepository).should().save(retrievedMark);
+    }
+
+    @Test
+    void deleteMarkTest() {
+        // given
+        given(markRepository.existsById(anyLong())).willReturn(false);
+
+        // when, then
+        assertThrows(EntityNotFoundCustomException.class, () -> markService.deleteMarkById(13L));
+        then(markRepository).should().existsById(13L);
+    }
+
+    @ParameterizedTest
+    @MethodSource("supplyInconsistentValues")
+    void saveMarkWithWrongValuesTest(Double mark) {
+        // given
+        MarkDTO markDTO = MarkDTO.builder()
+                .courseName("Biology")
+                .mark(mark)
+                .build();
+        // when, then
+        assertThrows(EntityValidationException.class, () -> markService.saveMark(markDTO));
+    }
+
+    private static Stream<Arguments> supplyInconsistentValues() {
+        return Stream.of(
+                Arguments.of(1.2),
+                Arguments.of(1.98),
+                Arguments.of(0.3),
+                Arguments.of(6.2),
+                Arguments.of(7.0)
+        );
+    }
+
+    @Test
+    void saveMarkTest() throws EntityValidationException {
+        // given
+        Student student = new Student(13L, "Ivan Doe", new HashSet<>());
+        Course course = new Course(13L, "History");
+        MarkDTO receivedMark = MarkDTO.builder()
+                .mark(5.5)
+                .courseName("History")
+                .studentName("Ivan Doe")
+                .build();
+
+        Mark savedMark = new Mark(13L, 5.5, LocalDateTime.now(), student, course);
+        given(studentRepository.findStudentByName(anyString())).willReturn(Optional.of(student));
+        given(courseRepository.findCourseByName(anyString())).willReturn(Optional.of(course));
+        given(markRepository.save(any(Mark.class))).willReturn(savedMark);
+
+        // when
+        MarkDTO savedMarkDTO = markService.saveMark(receivedMark);
+
+        // then
+        assertAll("savedMarkDTO assertions",
+                () -> assertNotNull(savedMarkDTO),
+                () -> assertEquals(receivedMark.getMark(), savedMarkDTO.getMark()),
+                () -> assertEquals(receivedMark.getCourseName(), savedMarkDTO.getCourseName()),
+                () -> assertEquals(receivedMark.getStudentName(), savedMarkDTO.getStudentName()));
     }
 }
