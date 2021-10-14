@@ -15,6 +15,7 @@ import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -84,9 +85,13 @@ public class MarkServiceImpl implements MarkService {
         return saveMarkToDatabase(mark);
     }
 
+    @Async
     @Override
     public void deleteMarkById(Long id) {
-
+        if (!markRepository.existsById(id)) {
+            throw new EntityNotFoundCustomException(String.format(ERROR_MARK_NOT_FOUND, id));
+        }
+        markRepository.deleteById(id);
     }
 
     private void verifyMarkDTO(MarkDTO markDTO) throws EntityValidationException {
