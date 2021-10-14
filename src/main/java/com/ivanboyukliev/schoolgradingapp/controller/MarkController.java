@@ -27,6 +27,12 @@ public class MarkController {
         return markService.findAllMarks();
     }
 
+    @GetMapping("/{markId}")
+    MarkDTO findMarkById(@PathVariable String markId) {
+        return markService.findMarkById(Long.valueOf(markId));
+
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     MarkDTO saveMark(@RequestBody MarkDTO markDTO) throws EntityValidationException {
@@ -39,5 +45,11 @@ public class MarkController {
                        @RequestBody MarkDTO markDTO) throws EntityValidationException {
 
         return markService.updateMark(Long.valueOf(markId), markDTO);
+    }
+
+    @DeleteMapping("/{markId}")
+    @ResponseStatus(HttpStatus.OK)
+    void deleteMark(@PathVariable String markId) {
+        markService.deleteMarkById(Long.valueOf(markId));
     }
 }
