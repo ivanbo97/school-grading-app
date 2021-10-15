@@ -38,6 +38,12 @@ public class CourseController {
         return courseService.saveCourse(courseDTO);
     }
 
+    @PutMapping("/{courseId}")
+    public CourseDTO updateCourse(@PathVariable String courseId,
+                                  @RequestBody CourseDTO courseDTO) throws EntityValidationException {
+        return courseService.updateCourse(Long.valueOf(courseId), courseDTO);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCourse(@PathVariable String id) {
