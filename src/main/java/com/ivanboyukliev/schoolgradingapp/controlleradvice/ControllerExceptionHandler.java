@@ -4,6 +4,7 @@ import com.ivanboyukliev.schoolgradingapp.exception.EntityNotFoundCustomExceptio
 import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,13 +21,20 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(EntityValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleEntityValidationException(EntityValidationException exception){
+    public ErrorMessage handleEntityValidationException(EntityValidationException exception) {
         return new ErrorMessage(logError(exception));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorMessage handleUserNotFoundException(UsernameNotFoundException exception) {
+        return new ErrorMessage(logError(exception));
+
     }
 
     private String logError(Exception exception) {
         String exceptionMessage = exception.getMessage();
-        log.error("Handling {} with message {}",exception.getClass().getSimpleName(),exceptionMessage);
+        log.error("Handling {} with message {}", exception.getClass().getSimpleName(), exceptionMessage);
         return exceptionMessage;
     }
 }
