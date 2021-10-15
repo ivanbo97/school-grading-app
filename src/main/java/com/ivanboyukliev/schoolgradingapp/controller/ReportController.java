@@ -27,4 +27,10 @@ public class ReportController {
         return reportService.avgStudentMarkForCourse(
                 Long.valueOf(studentId), Long.valueOf(courseId));
     }
+
+    @GetMapping("/avg/student/{studentId}")
+    @ResponseStatus(HttpStatus.OK)
+    ReportDTO getAvgMarkForStudentInAllCourses(@PathVariable String studentId) throws EntityValidationException {
+        return reportService.avgStudentMarkAllCourses(Long.valueOf(studentId));
+    }
 }
