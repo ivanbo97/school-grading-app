@@ -23,30 +23,36 @@ import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.FIVE_
 
 public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
 
-    private  final String JWT_KEY = "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4";
-    private  final String JWT_HEADER = "Authorization";
+    static final String JWT_KEY = "jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4";
+    static final String JWT_HEADER = "Authorization";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication != null){
+        if (authentication != null) {
             SecretKey key = Keys.hmacShaKeyFor(JWT_KEY.getBytes(StandardCharsets.UTF_8));
             String jwt = Jwts.builder()
                     .setIssuer("School Grading App")
                     .setSubject("JWT Token")
-                    .claim("username",authentication.getName())
-                    .claim("authorities",populateAuthorities(authentication.getAuthorities()))
+                    .claim("username", authentication.getName())
+                    .claim("authorities", populateAuthorities(authentication.getAuthorities()))
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(new Date().getTime() + FIVE_HOURS))
                     .signWith(key).compact();
-            response.setHeader(JWT_HEADER,jwt);
+            response.setHeader(JWT_HEADER, jwt);
+            System.out.println("GENERATED TOKEN: " + jwt);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
-    private String populateAuthorities(Collection<? extends GrantedAuthority> collection){
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return !request.getServletPath().equals("/login");
+    }
+
+    private String populateAuthorities(Collection<? extends GrantedAuthority> collection) {
         Set<String> authoritiesSet = new HashSet<>();
         for (GrantedAuthority auth : collection) {
             authoritiesSet.add(auth.getAuthority());
