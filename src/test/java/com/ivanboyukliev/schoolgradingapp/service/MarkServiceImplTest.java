@@ -65,7 +65,7 @@ class MarkServiceImplTest {
         // given
         List<Mark> marks = new ArrayList<>();
         Course course = new Course(1L, "Biology");
-        Student student = new Student(1L, "Yoan Doe", new HashSet<>());
+        Student student = new Student(1L, "Yoan Doe", new HashSet<>(),null);
         marks.add(new Mark(1L, 5.00d, LocalDateTime.now(), student, course));
         marks.add(new Mark(2L, 4.00d, LocalDateTime.now(), student, course));
         marks.add(new Mark(3L, 6.00d, LocalDateTime.now(), student, course));
@@ -84,7 +84,7 @@ class MarkServiceImplTest {
         // given
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(ENTITY_MARK_DATE_TIME_FORMAT);
         Course course = new Course(1L, "TestCourseOne");
-        Student student = new Student(1L, "TestStudentOne", new HashSet<>());
+        Student student = new Student(1L, "TestStudentOne", new HashSet<>(),null);
         Mark retrievedMark = new Mark(13L, 5.00d, LocalDateTime.now(), student, course);
 
         given(markRepository.findById(anyLong())).willReturn(Optional.of(retrievedMark));
@@ -107,7 +107,7 @@ class MarkServiceImplTest {
     void updateMarkTest() throws EntityValidationException {
 
         // given
-        Student student = new Student(12L, "Ivan Doe", new HashSet<>());
+        Student student = new Student(12L, "Ivan Doe", new HashSet<>(),null);
         Course course = new Course(1L, "Biology");
         Mark retrievedMark = new Mark(13L, 5.0d, LocalDateTime.now(), student, course);
 
@@ -168,7 +168,7 @@ class MarkServiceImplTest {
     @Test
     void saveMarkTest() throws EntityValidationException {
         // given
-        Student student = new Student(13L, "Ivan Doe", new HashSet<>());
+        Student student = new Student(13L, "Ivan Doe", new HashSet<>(),null);
         Course course = new Course(13L, "History");
         MarkDTO receivedMark = MarkDTO.builder()
                 .mark(5.5)
