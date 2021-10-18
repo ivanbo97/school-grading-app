@@ -1,5 +1,21 @@
 package com.ivanboyukliev.schoolgradingapp.bootstrap;
 
+import com.ivanboyukliev.schoolgradingapp.domain.Course;
+import com.ivanboyukliev.schoolgradingapp.domain.Mark;
+import com.ivanboyukliev.schoolgradingapp.domain.SchoolSystemCredential;
+import com.ivanboyukliev.schoolgradingapp.domain.Student;
+import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
+import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
+import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
+import com.ivanboyukliev.schoolgradingapp.security.roles.SchoolSystemUserRole;
+import com.opencsv.CSVReader;
+import com.opencsv.bean.CsvToBeanBuilder;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,24 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.ivanboyukliev.schoolgradingapp.domain.SchoolSystemCredential;
-import com.ivanboyukliev.schoolgradingapp.security.roles.SchoolSystemUserRole;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
-
-import com.ivanboyukliev.schoolgradingapp.domain.Course;
-import com.ivanboyukliev.schoolgradingapp.domain.Mark;
-import com.ivanboyukliev.schoolgradingapp.domain.Student;
-import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
-import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
-import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
-import com.opencsv.CSVReader;
-import com.opencsv.bean.CsvToBeanBuilder;
-
-import lombok.extern.slf4j.Slf4j;
 
 import static com.ivanboyukliev.schoolgradingapp.security.roles.SchoolSystemUserRole.ADMIN;
 import static com.ivanboyukliev.schoolgradingapp.security.roles.SchoolSystemUserRole.USER;
@@ -70,12 +68,12 @@ public class DataLoader implements CommandLineRunner {
         markRepository.saveAll(retrievedMarks);
 
         log.info("Adding credentials...");
-        for (long i = 0; i < 5; i++) {
+        for (long i = 1; i < 5; i++) {
             SchoolSystemUserRole role = (i % 2 != 0) ? USER : ADMIN;
             Student student = studentRepository.findById(i).orElseThrow();
             addCredentials(student, role);
         }
-        log.info("Sucessful saved data to DB.");
+        log.info("Successful saved data to DB.");
     }
 
     private List<AggregatedDataBean> loadDataFromFile() {
