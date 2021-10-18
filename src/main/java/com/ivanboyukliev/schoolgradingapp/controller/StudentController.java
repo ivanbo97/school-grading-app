@@ -6,6 +6,7 @@ import com.ivanboyukliev.schoolgradingapp.exception.EntityValidationException;
 import com.ivanboyukliev.schoolgradingapp.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.STUDENT_BASE_URL;
@@ -23,6 +24,7 @@ public class StudentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public StudentListDTO findAllStudents() {
         return this.studentService.findAllStudents();
     }
