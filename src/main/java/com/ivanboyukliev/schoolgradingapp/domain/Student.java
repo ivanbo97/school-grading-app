@@ -37,7 +37,7 @@ public class Student implements BaseNamedEntity, BaseEntity {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<Mark> marks = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = ENTITY_SCHOOL_CREDENTIALS_COLUMN_NAME_USER_CREDENTIALS_ID)
     private SchoolSystemCredential credential;
 
