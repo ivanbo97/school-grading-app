@@ -26,7 +26,7 @@ public class SchoolSystemCredential {
 
     private String password;
 
-    @OneToOne(mappedBy = "credentials", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "credential", fetch = FetchType.EAGER)
     private Student student;
 
     @Enumerated(value = EnumType.STRING)
