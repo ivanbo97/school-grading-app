@@ -45,7 +45,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ReportDTO avgMarkForACourse(Long courseId) throws EntityValidationException {
-        return null;
+        validateStudentExistence(courseId);
+        Double avgMark = markRepository.avgMarkForAllStudentsInACourse(courseId);
+        return formatReport(avgMark);
     }
 
     @Override
