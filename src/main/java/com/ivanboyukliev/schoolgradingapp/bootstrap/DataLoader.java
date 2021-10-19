@@ -103,7 +103,7 @@ public class DataLoader implements CommandLineRunner {
 
     private void addCredentials(Student student, SchoolSystemUserRole role) {
         SchoolSystemCredential credential = SchoolSystemCredential.builder()
-                .username(student.getName() + student.getId())
+                .username(student.getName())
                 .password(passwordEncoder.encode("password"))
                 .student(student)
                 .userRole(role)
