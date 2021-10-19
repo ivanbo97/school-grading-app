@@ -39,6 +39,9 @@ public final class ApplicationConstants {
     public static final String COURSE_BASE_URL = API_V1 + "/course";
     public static final String MARK_BASE_URL = API_V1 + "/mark";
     public static final String REPORT_BASE_URL = API_V1 + "/report";
+    public static final String GET_AVG_MARK_FOR_STUD_IN_COURSE = "/avg/student/{studentId}/course/{courseId}";
+    public static final String GET_AVG_MARK_FOR_STUD_IN_COURSES = "/avg/student/{studentId}";
+    public static final String GET_AVG_MARK_FOR_A_COURSE = "/avg/course/{courseId}";
 
     // Exception Messages
     public static final String ERROR_ENTITY_IS_NULL = "Entity Is Null";
