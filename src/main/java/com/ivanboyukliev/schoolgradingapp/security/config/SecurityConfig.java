@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -29,8 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
                 .authorizeRequests()
+                .antMatchers(STUDENT_BASE_URL + "/{studentId}")
+                .access("@permissionsRegulator.isUserAuthorizedToAccess(authentication,#studentId)")
+                .antMatchers(REPORT_BASE_URL + GET_AVG_MARK_FOR_STUD_IN_COURSES)
+                .access("@permissionsRegulator.isUserAuthorizedToAccess(authentication,#studentId)")
                 .anyRequest()
-                .authenticated().and()
+                .authenticated()
+                .and()
                 .httpBasic();
     }
 }
