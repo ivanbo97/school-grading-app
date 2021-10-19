@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.REPORT_BASE_URL;
+import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.*;
 
 @RestController
 @RequestMapping(REPORT_BASE_URL)
@@ -20,7 +20,7 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @GetMapping("/avg/student/{studentId}/course/{courseId}")
+    @GetMapping(GET_AVG_MARK_FOR_STUD_IN_COURSE)
     @ResponseStatus(HttpStatus.OK)
     ReportDTO getAvgMarkForStudentInCourse(@PathVariable String studentId,
                                            @PathVariable String courseId) throws EntityValidationException {
@@ -28,9 +28,15 @@ public class ReportController {
                 Long.valueOf(studentId), Long.valueOf(courseId));
     }
 
-    @GetMapping("/avg/student/{studentId}")
+    @GetMapping(GET_AVG_MARK_FOR_STUD_IN_COURSES)
     @ResponseStatus(HttpStatus.OK)
     ReportDTO getAvgMarkForStudentInAllCourses(@PathVariable String studentId) throws EntityValidationException {
         return reportService.avgStudentMarkAllCourses(Long.valueOf(studentId));
+    }
+
+    @GetMapping(GET_AVG_MARK_FOR_A_COURSE)
+    @ResponseStatus(HttpStatus.OK)
+    ReportDTO getAvgMarkForACourse(@PathVariable String courseId) throws EntityValidationException {
+        return reportService.avgMarkForACourse(Long.valueOf(courseId));
     }
 }
