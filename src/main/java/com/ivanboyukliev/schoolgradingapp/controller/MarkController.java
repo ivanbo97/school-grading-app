@@ -23,11 +23,12 @@ public class MarkController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    MarkListDTO findAllCourses() {
+    MarkListDTO findAllMarks() {
         return markService.findAllMarks();
     }
 
     @GetMapping("/{markId}")
+    @ResponseStatus(HttpStatus.OK)
     MarkDTO findMarkById(@PathVariable String markId) {
         return markService.findMarkById(Long.valueOf(markId));
 
