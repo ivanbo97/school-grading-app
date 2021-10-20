@@ -7,6 +7,7 @@ import com.ivanboyukliev.schoolgradingapp.repository.MarkRepository;
 import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import static com.ivanboyukliev.schoolgradingapp.util.ApplicationConstants.ERROR_COURSE_NOT_FOUND;
@@ -28,6 +29,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('avg:read')")
     public ReportDTO avgStudentMarkForCourse(Long studentId, Long courseId) throws EntityValidationException {
 
         this.validateCourseExistence(courseId);
@@ -37,6 +39,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('avg:read')")
     public ReportDTO avgStudentMarkAllCourses(Long studentId) throws EntityValidationException {
         this.validateStudentExistence(studentId);
         Double avgMark = markRepository.avgMarkForStudentInAllCourses(studentId);
@@ -44,6 +47,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ReportDTO avgMarkForACourse(Long courseId) throws EntityValidationException {
         validateStudentExistence(courseId);
         Double avgMark = markRepository.avgMarkForAllStudentsInACourse(courseId);
@@ -51,6 +55,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ReportDTO avgMarkAllStudentsForAllCourses() {
         Double avgMark = markRepository.avgMarkForAllStudentsInAllCourses();
         return formatReport(avgMark);

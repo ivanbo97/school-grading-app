@@ -10,6 +10,7 @@ import com.ivanboyukliev.schoolgradingapp.repository.CourseRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,6 +36,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('course:read')")
     public CourseListDTO findAllCourses() {
 
         log.info("CourseServiceImpl::findAllCourses");
@@ -46,6 +48,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('course:read')")
     public CourseDTO findCourseById(Long id) {
         log.info("CourseServiceImpl::findCourseById -> id passed = {}", id);
         return courseRepository.findById(id)
@@ -55,6 +58,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('course:write')")
     public CourseDTO saveCourse(CourseDTO course) throws EntityValidationException {
         entityValidator.validate(course);
         validateCourseExistence(course);
@@ -62,6 +66,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('course:write')")
     public CourseDTO updateCourse(Long id, CourseDTO course) throws EntityValidationException {
         entityValidator.validate(course);
         validateCourseExistence(course);
@@ -74,6 +79,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCourseById(Long id) {
             if(!courseRepository.existsById(id)){
                 throw new EntityNotFoundCustomException(String.format(ERROR_COURSE_NOT_FOUND,id));

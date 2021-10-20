@@ -16,6 +16,7 @@ import com.ivanboyukliev.schoolgradingapp.repository.StudentRepository;
 import com.ivanboyukliev.schoolgradingapp.validation.BaseNamedEntityValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -48,6 +49,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public MarkListDTO findAllMarks() {
         return new MarkListDTO(markRepository.findAll()
                 .stream()
@@ -56,6 +58,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('mark:read')")
     public MarkDTO findMarkById(Long id) {
         return markRepository.findById(id)
                 .map(markMapper::markToMarkDTO)
@@ -65,6 +68,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('mark:write')")
     public MarkDTO saveMark(MarkDTO markDTO) throws EntityValidationException {
         verifyMarkDTO(markDTO);
         Mark mark = this.relateMark(markDTO);
@@ -72,6 +76,7 @@ public class MarkServiceImpl implements MarkService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('mark:write')")
     public MarkDTO updateMark(Long id, MarkDTO markDTO) throws EntityValidationException {
         verifyMarkDTO(markDTO);
         Mark mark = markRepository.findById(id)
@@ -87,6 +92,7 @@ public class MarkServiceImpl implements MarkService {
 
     @Async
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteMarkById(Long id) {
         if (!markRepository.existsById(id)) {
             throw new EntityNotFoundCustomException(String.format(ERROR_MARK_NOT_FOUND, id));
