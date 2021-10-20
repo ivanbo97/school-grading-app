@@ -52,7 +52,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public ReportDTO avgMarkAllStudentsForAllCourses() {
-        return null;
+        Double avgMark = markRepository.avgMarkForAllStudentsInAllCourses();
+        return formatReport(avgMark);
     }
 
     @Override
