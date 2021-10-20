@@ -42,6 +42,7 @@ public final class ApplicationConstants {
     public static final String GET_AVG_MARK_FOR_STUD_IN_COURSE = "/avg/student/{studentId}/course/{courseId}";
     public static final String GET_AVG_MARK_FOR_STUD_IN_COURSES = "/avg/student/{studentId}";
     public static final String GET_AVG_MARK_FOR_A_COURSE = "/avg/course/{courseId}";
+    public static final String GET_AVG_MARK_FOR_ALL_COURSES = "/avg/student/course";
 
     // Exception Messages
     public static final String ERROR_ENTITY_IS_NULL = "Entity Is Null";
