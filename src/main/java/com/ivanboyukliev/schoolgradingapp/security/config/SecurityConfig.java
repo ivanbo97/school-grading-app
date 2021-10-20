@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .access("@permissionsRegulator.isUserAuthorizedToAccess(authentication,#studentId)")
                 .antMatchers(REPORT_BASE_URL + GET_AVG_MARK_FOR_STUD_IN_COURSES)
                 .access("@permissionsRegulator.isUserAuthorizedToAccess(authentication,#studentId)")
+                .antMatchers(REPORT_BASE_URL + GET_AVG_MARK_FOR_STUD_IN_COURSE)
+                .access("@permissionsRegulator.isUserAuthorizedToAccess(authentication,#studentId)")
                 .anyRequest()
                 .authenticated()
                 .and()
