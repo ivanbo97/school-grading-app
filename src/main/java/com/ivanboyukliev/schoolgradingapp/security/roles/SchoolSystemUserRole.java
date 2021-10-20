@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static com.ivanboyukliev.schoolgradingapp.security.roles.SchoolSystemPermission.*;
 
 public enum SchoolSystemUserRole {
-    USER(Sets.newHashSet(AVERAGE_MARK_READ)),
+    USER(Sets.newHashSet(AVERAGE_MARK_READ,MARK_READ)),
     ADMIN(Sets.newHashSet(
             MARK_READ, MARK_WRITE,
             STUDENT_READ, STUDENT_WRITE,
