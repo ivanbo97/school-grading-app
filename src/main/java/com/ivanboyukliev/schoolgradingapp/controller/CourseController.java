@@ -28,6 +28,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public CourseDTO findCourseById(@PathVariable String id) {
         return courseService.findCourseById(Long.valueOf(id));
     }
@@ -39,6 +40,7 @@ public class CourseController {
     }
 
     @PutMapping("/{courseId}")
+    @ResponseStatus(HttpStatus.OK)
     public CourseDTO updateCourse(@PathVariable String courseId,
                                   @RequestBody CourseDTO courseDTO) throws EntityValidationException {
         return courseService.updateCourse(Long.valueOf(courseId), courseDTO);
