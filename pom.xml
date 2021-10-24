@@ -20,6 +20,7 @@
         <junit-platform.version>5.7.2</junit-platform.version>
         <mockito.version>3.9.0</mockito.version>
         <io.jsonwebtoken.version>0.11.1</io.jsonwebtoken.version>
+        <springdoc-openapi.version>1.5.4</springdoc-openapi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -132,6 +133,13 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>28.1-jre</version>
+        </dependency>
+
+        <!-- Open Api -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
     </dependencies>
 
