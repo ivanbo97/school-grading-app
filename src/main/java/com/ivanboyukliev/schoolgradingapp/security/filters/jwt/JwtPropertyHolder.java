@@ -2,6 +2,7 @@ package com.ivanboyukliev.schoolgradingapp.security.filters.jwt;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -10,6 +11,7 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtPropertyHolder {
 
+    private final String authorizationHeader = HttpHeaders.AUTHORIZATION;
     private final String tokenPrefix;
     private final Long expirationDays;
     private final SecretKey secretKey;
