@@ -1,6 +1,8 @@
 package com.ivanboyukliev.schoolgradingapp.security.filters.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ivanboyukliev.schoolgradingapp.security.auth.SchoolUserDetails;
+import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Slf4j
 public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -44,12 +48,23 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        // To - Do
-        super.successfulAuthentication(request, response, chain, authResult);
+
+        SchoolUserDetails userDetails = (SchoolUserDetails) authResult.getPrincipal();
+        log.info("UserDetails : username={} in successfulAuthMethod", userDetails.getUsername());
+        String token = Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim("authorities", authResult.getAuthorities())
+                .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtPropertyHolder.getExpirationDays())))
+                .signWith(jwtPropertyHolder.getSecretKey())
+                .compact();
+
+        response.addHeader(jwtPropertyHolder.getAuthorizationHeader(), jwtPropertyHolder.getTokenPrefix() + token);
+        String issuedToken = jwtPropertyHolder.getTokenPrefix() + token;
+        log.info("Token issued = {}", issuedToken);
     }
 }
