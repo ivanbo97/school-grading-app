@@ -135,11 +135,12 @@
             <version>28.1-jre</version>
         </dependency>
 
-        <!-- SpringFox -->
+        <!-- Open Api -->
+        <!-- Open Api -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
     </dependencies>
 
