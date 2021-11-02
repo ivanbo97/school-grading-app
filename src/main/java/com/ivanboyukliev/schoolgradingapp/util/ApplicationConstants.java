@@ -61,4 +61,6 @@ public final class ApplicationConstants {
     public static final String ERROR_COURSE_EXISTS = "Course with name %s already exists.";
 
     public static final int FIVE_HOURS = 18000000;
+
+    public static final String LOGIN_MEDIA_TYPE = "application/json";
 }
